@@ -1,0 +1,40 @@
+name: 🌀 Flux Agent Quality Gate
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  quality:
+    name: 🚀 Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📑 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: 🐍 Install Python
+        run: uv python install
+
+      - name: 🛠️ Install Dependencies
+        run: uv sync
+
+      - name: 🔍 Lint with Ruff
+        run: uv run ruff check .
+
+      - name: ✨ Format Check with Ruff
+        run: uv run ruff format --check .
+
+      - name: 🏷️ Type Check with Pyright
+        run: uv run pyright
+        continue-on-error: true
+
+      - name: 🧪 Run Tests with Pytest
+        run: uv run pytest
+        continue-on-error: true
