@@ -1,3 +1,4 @@
+import os
 from strands import Agent
 from strands.models.ollama import OllamaModel
 from strands.multiagent import GraphBuilder
@@ -8,8 +9,10 @@ from app.tools import get_all_tools
 class ContentLoopWorkflow:
     """Encapsulates the graph with a write-review-improve feedback loop."""
 
-    def __init__(self, model_id: str = "llama3.1:latest", approval_after: int = 2):
-        self.model = OllamaModel(host="http://localhost:11434", model_id=model_id)
+    def __init__(self, model_id: str | None = None, approval_after: int = 2):
+        ollama_host = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+        ollama_model = model_id or os.getenv("OLLAMA_MODEL_ID", "llama3.1:latest")
+        self.model = OllamaModel(host=ollama_host, model_id=ollama_model)
         self.approval_after = approval_after
         self.tools = get_all_tools()
         self.graph = self._build_graph()
