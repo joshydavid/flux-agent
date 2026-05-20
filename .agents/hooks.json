@@ -1,0 +1,15 @@
+{
+  "default": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${ANTIGRAVITY_PROJECT_DIR}/.agents/hooks/session-start.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
